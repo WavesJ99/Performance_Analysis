@@ -1,0 +1,69 @@
+const autocannon = require('autocannon');
+const fs = require('fs');
+
+// Configuration for the load tests
+const config = {
+  url: process.env.APP_URL || 'openmct-expressjs-mongodb-339-ege3dqhygzhtbqdn.northcentralus-01.azurewebsites.net', 
+  connections: 10,
+  duration: 30,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+};
+
+// Read operation test
+async function runReadTest() {
+  const result = await autocannon({
+    ...config,
+    title: 'Read Operations Test',
+    requests: [
+      {
+        method: 'GET',
+        path: '/api/telemetry',  // Replace with the correct read endpoint
+      },
+    ],
+  });
+
+  fs.writeFileSync('read-test-results.json', JSON.stringify(result, null, 2));
+  console.log('Read Test Complete');
+}
+
+// Create/Edit operation test
+async function runWriteTest() {
+  const result = await autocannon({
+    ...config,
+    title: 'Write Operations Test',
+    requests: [
+      {
+        method: 'POST',
+        path: '/api/objects',  // Replace with the correct write endpoint
+        body: JSON.stringify({
+          type: 'telemetry',
+          name: 'Test Telemetry',
+          timestamp: Date.now(),
+        }),
+      },
+    ],
+  });
+
+  fs.writeFileSync('write-test-results.json', JSON.stringify(result, null, 2));
+  console.log('Write Test Complete');
+}
+
+// Run tests with increasing load
+async function runLoadTests() {
+  const loads = [10, 50, 100, 200, 500];  // Different levels of concurrency
+
+  for (const connections of loads) {
+    console.log(`Running tests with ${connections} concurrent connections`);  // Fixed string formatting
+    config.connections = connections;
+
+    await runReadTest();
+    await runWriteTest();
+
+    // Wait between tests to avoid overwhelming the server
+    await new Promise(resolve => setTimeout(resolve, 5000));  // 5-second delay between tests
+  }
+}
+
+runLoadTests().catch(console.error);
