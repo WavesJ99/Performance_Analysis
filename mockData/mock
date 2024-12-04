@@ -1,0 +1,141 @@
+function generateLaunchTestData(numberOfLaunches = 10) {
+
+    const launchSites = [
+
+        'Kennedy Space Center, FL',
+
+        'Cape Canaveral, FL',
+
+        'Vandenberg SFB, CA',
+
+        'Wallops Flight Facility, VA'
+
+    ];
+
+    
+
+    const rocketTypes = [
+
+        'Falcon 9',
+
+        'Atlas V',
+
+        'Delta IV Heavy',
+
+        'Space Launch System',
+
+        'Electron'
+
+    ];
+
+    
+
+    const missionTypes = [
+
+        'Satellite Deployment',
+
+        'ISS Resupply',
+
+        'Crew Transport',
+
+        'Lunar Mission',
+
+        'Mars Mission',
+
+        'Scientific Observatory'
+
+    ];
+
+
+
+    const getRandomDate = (start = new Date(2024, 0, 1), end = new Date(2025, 11, 31)) => {
+
+        return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+
+    };
+
+
+
+    const generateTelemetry = () => ({
+
+        altitude: Math.round(Math.random() * 400000), // meters
+
+        velocity: Math.round(Math.random() * 28000), // km/h
+
+        temperature: Math.round(Math.random() * 2000), // Celsius
+
+        fuel: Math.round(Math.random() * 100), // percentage
+
+        thrust: Math.round(Math.random() * 9000), // kN
+
+        stage: Math.floor(Math.random() * 3) + 1
+
+    });
+
+
+
+    const launches = [];
+
+
+
+    for (let i = 0; i < numberOfLaunches; i++) {
+
+        const launchDate = getRandomDate();
+
+        
+
+        launches.push({
+
+            id: `launch-${i + 1}`,
+
+            timestamp: launchDate.getTime(),
+
+            name: `Mission ${i + 1}`,
+
+            site: launchSites[Math.floor(Math.random() * launchSites.length)],
+
+            rocket: rocketTypes[Math.floor(Math.random() * rocketTypes.length)],
+
+            missionType: missionTypes[Math.floor(Math.random() * missionTypes.length)],
+
+            status: Math.random() > 0.1 ? 'SUCCESS' : 'FAILURE',
+
+            telemetry: generateTelemetry(),
+
+            crew: Math.random() > 0.7 ? Math.floor(Math.random() * 4) + 1 : 0,
+
+            payload: {
+
+                mass: Math.round(Math.random() * 20000), // kg
+
+                type: Math.random() > 0.5 ? 'Satellite' : 'Cargo'
+
+            },
+
+            weather: {
+
+                temperature: Math.round(Math.random() * 35),
+
+                windSpeed: Math.round(Math.random() * 30),
+
+                precipitation: Math.random() > 0.8
+
+            }
+
+        });
+
+    }
+
+
+
+    return launches;
+
+}
+
+
+
+// Example usage:
+
+const testData = generateLaunchTestData(5);
+
+console.log(JSON.stringify(testData, null, 2));
