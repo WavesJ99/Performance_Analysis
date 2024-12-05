@@ -1,3 +1,10 @@
+# Setup
+OpenMCT can be deployed on Azure for testing using the instructions from the
+article entitled "Tutorial: Deploy a Node.js + MongoDB web app to Azure".
+The link is:
+https://learn.microsoft.com/en-us/azure/app-service/tutorial-nodejs-mongodb-app?tabs=copilot&pivots=azure-portal
+
+
 # Performance_Analysis
 Performance analysis files for openMCT
 
